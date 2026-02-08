@@ -87,9 +87,13 @@ const App: React.FC = () => {
                       ></div>
                     ))}
                     
-                    {/* Core Logo/Icon in 3D */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 glass-card rounded-3xl flex items-center justify-center text-5xl font-black text-white shadow-2xl rotate-12">
-                      E
+                    {/* GANTI BAGIAN INI: Core Logo/Icon in 3D */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 glass-card rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl rotate-12 border border-white/10">
+                      <img 
+                        src="/images/icon.jpg" 
+                        alt="Core Logo" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                </div>
