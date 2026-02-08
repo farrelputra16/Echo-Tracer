@@ -6,8 +6,13 @@ const Footer: React.FC = () => {
     <footer className="py-16 px-6 sm:px-10 lg:px-16 border-t border-white/5 bg-black/50 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
         <div className="flex items-center gap-4 group no-clip">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-emerald-400 flex items-center justify-center font-bold text-white shadow-xl transition-transform group-hover:scale-110">
-            E
+          {/* Ganti div huruf E dengan img di bawah ini */}
+          <div className="w-9 h-9 rounded-xl overflow-hidden shadow-xl transition-transform group-hover:scale-110 border border-white/10">
+            <img 
+              src="/images/icon.jpg" 
+              alt="Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <span className="text-xl font-display font-bold tracking-tight pr-2 no-clip">
             ECHO <span className="text-emerald-400 italic">TRACER</span>

@@ -14,8 +14,13 @@ const Header: React.FC<HeaderProps> = ({ scrolled }) => {
           : 'bg-transparent border-transparent'
       }`}>
         <div className="flex items-center gap-4 group cursor-pointer no-clip">
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-display font-black text-black text-xl transition-all group-hover:bg-purple-500 group-hover:text-white group-hover:rotate-[360deg] duration-700 shadow-xl">
-            E
+          {/* Ganti div huruf E dengan img di bawah ini */}
+          <div className="w-10 h-10 rounded-xl overflow-hidden transition-all group-hover:rotate-[360deg] duration-700 shadow-xl border border-white/10">
+            <img 
+              src="/images/icon.jpg" 
+              alt="Echo Tracer Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <span className="font-display font-bold tracking-tight text-2xl pr-2 no-clip">
             ECHO <span className="text-purple-500 italic">TRACER</span>
