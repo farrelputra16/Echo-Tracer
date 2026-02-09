@@ -1,46 +1,58 @@
-
 import React, { useEffect, useState } from 'react';
 
 const EchoVisualization: React.FC = () => {
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [activeNode, setActiveNode] = useState<number | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 12;
-      const y = (e.clientY / window.innerHeight - 0.5) * 12;
+      // Mengurangi sensitivitas rotasi agar tetap fokus di tengah
+      const x = (e.clientX / window.innerWidth - 0.5) * 8;
+      const y = (e.clientY / window.innerHeight - 0.5) * 8;
       setRotate({ x: -y, y: x });
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  const nodeDetails = [
+    "Signature: 5zR...p9w | Value: 45.2 SOL",
+    "Source: Raydium LP v4 | Hop: 2",
+    "Cluster Detection: 4 Wallets Sync",
+    "Liquidity Provision: $12,400",
+    "Smart Money Inflow: High"
+  ];
+
   return (
-    <div className="relative group perspective-2000 py-12">
+    <div className="relative group perspective-2000 py-20">
+      {/* Background Glow raksasa di belakang card */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-purple-600/20 blur-[120px] rounded-full -z-10"></div>
+
       <div 
-        className="relative w-full aspect-[21/9] bg-black/60 rounded-[4rem] border border-white/10 overflow-hidden shadow-[0_0_120px_-30px_rgba(168,85,247,0.4)] transition-transform duration-500 preserve-3d"
+        className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-black/40 rounded-[4rem] border border-white/10 overflow-hidden shadow-[0_0_100px_-20px_rgba(168,85,247,0.3)] transition-transform duration-700 ease-out preserve-3d"
         style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
       >
-        {/* Particle System */}
-        <div className="absolute inset-0 opacity-40">
-          {[...Array(30)].map((_, i) => (
-            <div 
-              key={i} 
-              className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.3,
-                animation: `pulse ${2 + Math.random() * 4}s infinite alternate`,
-                boxShadow: '0 0 8px rgba(168, 85, 247, 0.5)'
-              }}
-            ></div>
-          ))}
-        </div>
+        {/* Tooltip Hologram (Diposisikan agar tidak menutupi tengah) */}
+        {activeNode !== null && (
+          <div className="absolute top-8 right-8 z-50 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="glass-card px-6 py-4 rounded-2xl border-purple-500/50 bg-purple-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+              <div className="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] mb-1">Neural_Node_Detected</div>
+              <div className="text-white font-mono text-xs">{nodeDetails[activeNode % nodeDetails.length]}</div>
+            </div>
+          </div>
+        )}
 
-        {/* The Node Web */}
-        <div className="absolute inset-0 flex items-center justify-center p-12 translate-z-20">
-          <svg className="w-full h-full opacity-100 filter drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" viewBox="0 0 1000 400">
+        {/* Layer SVG Utama */}
+        <div className="absolute inset-0 flex items-center justify-center translate-z-40">
+          <svg className="w-[90%] h-[90%]" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet">
             <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
               <linearGradient id="traceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#14f195" />
                 <stop offset="50%" stopColor="#a855f7" />
@@ -49,78 +61,63 @@ const EchoVisualization: React.FC = () => {
             </defs>
 
             <g>
-              <circle cx="100" cy="200" r="14" fill="#14f195" className="animate-pulse shadow-lg" />
-              <text x="100" y="245" fill="#14f195" textAnchor="middle" className="font-mono text-[11px] font-black tracking-[0.2em] uppercase">Target_Base</text>
-              
-              {[...Array(14)].map((_, i) => {
-                const angle = (i / 14) * Math.PI * 2;
-                const tx = 350 + Math.cos(angle) * 180;
-                const ty = 200 + Math.sin(angle) * 120;
+              {/* Garis-garis koneksi yang lebih tebal dan dinamis */}
+              {[...Array(16)].map((_, i) => {
+                const angle = (i / 16) * Math.PI * 2;
+                // Node luar disebar secara simetris mengelilingi pusat
+                const tx = 500 + Math.cos(angle) * 320;
+                const ty = 200 + Math.sin(angle) * 140;
+                
                 return (
                   <React.Fragment key={i}>
                     <path 
-                      d={`M114 200 Q220 ${200 + (Math.random() - 0.5) * 250} ${tx} ${ty}`} 
+                      d={`M500 200 C${500 + (tx-500)/2} ${ty}, ${500 + (tx-500)/2} 200, ${tx} ${ty}`} 
                       stroke="url(#traceGrad)" 
-                      strokeWidth="0.75" 
+                      strokeWidth={activeNode === i ? "4" : "1.5"} 
                       fill="none" 
-                      strokeDasharray="6,6" 
-                      className="animate-[shimmer_12s_linear_infinite]"
-                      opacity="0.5"
+                      className="transition-all duration-500 opacity-40 group-hover:opacity-60"
+                      strokeDasharray={activeNode === i ? "none" : "8,4"}
                     />
-                    <circle cx={tx} cy={ty} r="5" fill="#a855f7" opacity="0.8" />
-                    
-                    {/* Secondary tree layers */}
-                    {[...Array(2)].map((_, j) => {
-                      const sx = tx + 200 + Math.random() * 60;
-                      const sy = ty + (j === 0 ? -60 : 60);
-                      return (
-                        <React.Fragment key={j}>
-                          <path 
-                            d={`M${tx} ${ty} L${sx} ${sy}`} 
-                            stroke="#a855f7" 
-                            strokeWidth="0.3" 
-                            fill="none" 
-                            opacity="0.3"
-                          />
-                          <circle cx={sx} cy={sy} r="3" fill="#a855f7" opacity="0.4" />
-                        </React.Fragment>
-                      );
-                    })}
+                    <circle 
+                      cx={tx} cy={ty} 
+                      r={activeNode === i ? "12" : "6"} 
+                      fill={activeNode === i ? "#fff" : "#a855f7"} 
+                      className="cursor-pointer transition-all duration-300 shadow-2xl"
+                      filter="url(#glow)"
+                      onMouseEnter={() => setActiveNode(i)}
+                      onMouseLeave={() => setActiveNode(null)}
+                    />
                   </React.Fragment>
                 );
               })}
+
+              {/* Node PUSAT (CORE NODE) - Dibuat Besar dan Menonjol */}
+              <g className="translate-z-50">
+                <circle cx="500" cy="200" r="45" className="fill-purple-600/20 animate-pulse" />
+                <circle cx="500" cy="200" r="30" className="fill-purple-500/40 animate-pulse [animation-delay:0.5s]" />
+                <circle 
+                  cx="500" cy="200" r="20" 
+                  fill="#fff" 
+                  filter="url(#glow)"
+                  className="shadow-[0_0_50px_rgba(168,85,247,0.8)]" 
+                />
+              </g>
             </g>
           </svg>
         </div>
 
-        {/* Dynamic UI Overlays */}
-        <div className="absolute bottom-12 left-16 space-y-3 translate-z-30">
-          <div className="flex items-center gap-4">
-             <div className="h-1.5 w-40 bg-zinc-800/80 rounded-full overflow-hidden border border-white/5">
-                <div className="h-full bg-gradient-to-r from-purple-500 to-emerald-400 w-[84%] animate-[shimmer_3s_infinite]"></div>
+        {/* Info Bar di bagian bawah */}
+        <div className="absolute bottom-10 w-full flex justify-center translate-z-50 px-10">
+          <div className="glass-card flex items-center gap-6 px-8 py-3 rounded-full border-white/5 bg-black/20">
+             <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+                <span className="text-[10px] font-mono font-bold text-emerald-400 tracking-[0.3em]">LIVE_RECURSIVE_TRACING</span>
              </div>
-             <span className="text-[12px] font-mono font-black text-purple-400 tracking-widest">CASCADE_ACTIVE_84%</span>
-          </div>
-          <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.4em]">
-            Syncing: 142.1k Transactions // Hop_Depth: 10
+             <div className="h-4 w-px bg-white/10"></div>
+             <span className="text-[10px] font-mono text-purple-400 font-bold tracking-[0.3em]">CORE_STABILITY: 100%</span>
           </div>
         </div>
-
-        <div className="absolute top-12 right-16 text-right translate-z-30">
-           <div className="text-[12px] font-black text-white bg-black/40 border border-white/10 px-6 py-2.5 rounded-[1.5rem] backdrop-blur-xl shadow-2xl tracking-widest uppercase">
-             Neural_Mapping_Ready
-           </div>
-        </div>
-
-        {/* Scanning Sweep Effect */}
-        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-10 animate-[move-x_8s_linear_infinite]"></div>
       </div>
-      <style>{`
-        @keyframes move-x {
-          0% { transform: translateX(-100px); }
-          100% { transform: translateX(110%); }
-        }
-      `}</style>
     </div>
   );
 };

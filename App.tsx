@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
 import LiveAlerts from './components/LiveAlerts';
 import EchoVisualization from './components/EchoVisualization';
+import CabalSimulation from './components/CabalSimulation'; // Import Komponen Baru
+import Terminal from './components/Terminal';               // Import Komponen Baru
 import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
       <main className="relative z-10">
         <Hero />
         
+        {/* Features Section */}
         <section id="features" className="py-32 px-6 max-w-7xl mx-auto">
           <div className="mb-20 text-center space-y-4">
             <div className="inline-block px-4 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 text-purple-400 text-[10px] font-black uppercase tracking-[0.3em] mb-4">
@@ -67,14 +69,12 @@ const App: React.FC = () => {
                   </div>
                </div>
                <div className="flex-1 w-full flex justify-center perspective-2000 relative">
-                  {/* Floating Elements for "Illustration" effect */}
                   <div className="relative w-full aspect-square max-w-md animate-float-slow">
                     <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-emerald-400/20 blur-3xl opacity-50"></div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-white/10 rounded-full animate-[spin_20s_linear_infinite]"></div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-white/5 rounded-full animate-[spin_30s_linear_infinite_reverse]"></div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-white/5 rounded-full animate-[spin_40s_linear_infinite]"></div>
                     
-                    {/* Fake Data Dots */}
                     {[...Array(8)].map((_, i) => (
                       <div 
                         key={i}
@@ -87,7 +87,6 @@ const App: React.FC = () => {
                       ></div>
                     ))}
                     
-                    {/* GANTI BAGIAN INI: Core Logo/Icon in 3D */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 glass-card rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl rotate-12 border border-white/10">
                       <img 
                         src="/images/icon.jpg" 
@@ -101,6 +100,29 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        {/* Cabal Mapping Simulation Section - NEW INTERACTIVE SECTION */}
+        <section className="py-32 overflow-hidden relative">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="space-y-8 order-2 lg:order-1">
+              <CabalSimulation />
+            </div>
+            <div className="space-y-8 order-1 lg:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold tracking-widest uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                Cluster Engine
+              </div>
+              <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight tracking-tighter">
+                Unmask the <br/>
+                <span className="text-emerald-400 italic font-light">Insider Cabals</span>
+              </h2>
+              <p className="text-gray-400 text-xl leading-relaxed font-light">
+                Use our cluster mapping tool to visualize how whales distribute their assets across dozens of burner wallets. Detect coordination patterns instantly before the price moves.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Live Surveillance Section */}
         <section id="live" className="py-32 overflow-hidden relative">
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
@@ -134,6 +156,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        {/* Echo Mode Section */}
         <section id="echo-mode" className="py-32 bg-gradient-to-b from-black via-purple-950/5 to-black">
           <div className="max-w-7xl mx-auto px-6 text-center mb-16">
              <div className="text-[11px] font-black uppercase tracking-[0.4em] text-purple-500 mb-6">Recursive Trace Engine</div>
@@ -149,6 +172,9 @@ const App: React.FC = () => {
 
         <CallToAction />
       </main>
+
+      {/* Terminal Dock - FIXED OVERLAY */}
+      <Terminal />
 
       <Footer />
     </div>

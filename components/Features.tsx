@@ -49,6 +49,7 @@ const features = [
 const FeatureCard: React.FC<{f: typeof features[0], i: number}> = ({f, i}) => {
   const [rotate, setRotate] = React.useState({ x: 0, y: 0 });
 
+  // Fungsi MouseMove tetap sama ...
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
@@ -56,24 +57,32 @@ const FeatureCard: React.FC<{f: typeof features[0], i: number}> = ({f, i}) => {
     setRotate({ x, y });
   };
 
-  const onMouseLeave = () => setRotate({ x: 0, y: 0 });
-
   return (
     <div 
       className="perspective-2000 group cursor-default h-full"
       onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={() => setRotate({ x: 0, y: 0 })}
     >
       <div 
-        className="glass-card p-10 rounded-[2.5rem] relative h-full flex flex-col overflow-hidden transition-all duration-300 preserve-3d hover:border-white/20 group-hover:shadow-[0_0_50px_-10px_rgba(168,85,247,0.2)]"
+        className="glass-card p-10 rounded-[2.5rem] relative h-full flex flex-col overflow-hidden transition-all duration-500 preserve-3d hover:border-white/20"
         style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
       >
+        {/* Layer Efek Baru: Progressive Raw Data Background */}
+        <div className="absolute inset-0 p-6 opacity-0 group-hover:opacity-[0.07] transition-opacity duration-700 pointer-events-none font-mono text-[8px] leading-tight text-white overflow-hidden select-none">
+          {Array(20).fill(0).map((_, idx) => (
+            <div key={idx} className="whitespace-nowrap">
+              0x{Math.random().toString(16).slice(2, 10)}...{Math.random().toString(16).slice(2, 10)} 
+              SYNC_NODE_{f.visual} // status: active // flow: recursive_trace_{idx}
+            </div>
+          ))}
+        </div>
+
         <div className="relative z-10 translate-z-20 flex-1">
           <div className="flex justify-between items-start mb-8">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl bg-black/40 border border-white/5 shadow-inner`}>
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl bg-black/40 border border-white/5 shadow-inner">
               {f.icon}
             </div>
-            <div className="text-[10px] font-mono text-white/20 group-hover:text-purple-400/50 transition-colors">
+            <div className="text-[10px] font-mono text-white/20 group-hover:text-purple-400/50 transition-colors uppercase">
               MOD_{f.visual}
             </div>
           </div>
@@ -81,21 +90,20 @@ const FeatureCard: React.FC<{f: typeof features[0], i: number}> = ({f, i}) => {
           <p className="text-gray-500 leading-relaxed text-sm md:text-base mb-6 font-light">{f.description}</p>
         </div>
 
-        <div className="mt-auto pt-6 flex items-center justify-between">
+        <div className="mt-auto pt-6 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-purple-400 transition-colors">
             Active Module
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
           </div>
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
             <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </div>
         </div>
 
-        {/* Decorative Graphic Background */}
+        {/* Decorative Glow Tetap Sama ... */}
         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/5 blur-[40px] rounded-full group-hover:bg-purple-500/10 transition-colors"></div>
-        <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
       </div>
     </div>
   );
